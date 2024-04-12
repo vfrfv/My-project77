@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -9,10 +6,13 @@ public class Movement : MonoBehaviour
     [SerializeField] private float _speed = 5;
     [SerializeField] private float _strafeSpeed = 5;
     [SerializeField] private float _jumpSpeed = 7f;
+
     [SerializeField] private float _gravityFactor = 2f;
     [SerializeField] private Transform _cameraTransform;
+
     [SerializeField] private float _horizontalTurnSensitivity = 10f;
     [SerializeField] private float _verticalTurnSensitivity = 10f;
+
     [SerializeField] private float _verticalMinAngle = -88f;
     [SerializeField] private float _verticalMaxAngle = 88f;
 
@@ -20,7 +20,6 @@ public class Movement : MonoBehaviour
     private Transform _transform;
     private CharacterController _characterController;
     private float _cameraAngle = 0;
-    
 
     private void Awake()
     {
@@ -31,14 +30,16 @@ public class Movement : MonoBehaviour
 
     private void Update()
     {
-        Vector3 forward = Vector3.ProjectOnPlane( _cameraTransform.forward,Vector3.up).normalized;
-        Vector3 right = Vector3.ProjectOnPlane( _cameraTransform.right,Vector3.up).normalized;
+        RotateCamera();
+        Move();
+    }
 
-        _cameraAngle -= Input.GetAxis("Mouse Y") * _verticalTurnSensitivity;
-        _cameraAngle = Mathf.Clamp(_cameraAngle, _verticalMinAngle,_verticalMaxAngle);
-        _cameraTransform.localEulerAngles = Vector3.right * _cameraAngle;
+    private void Move()
+    {
+        Vector3 forward = Vector3.ProjectOnPlane(_cameraTransform.forward, Vector3.up).normalized;
+        Vector3 right = Vector3.ProjectOnPlane(_cameraTransform.right, Vector3.up).normalized;
 
-        _transform.Rotate(Vector3.up * _horizontalTurnSensitivity * Input.GetAxis("Mouse X"));
+        
 
         if (_characterController != null)
         {
@@ -64,7 +65,16 @@ public class Movement : MonoBehaviour
                 _verticalVelocity += Physics.gravity * Time.deltaTime * _gravityFactor;
                 _characterController.Move((horizontalVelocity + _verticalVelocity) * Time.deltaTime);
             }
-        }    
+        }
+    }
+
+    private void RotateCamera()
+    {
+        _cameraAngle -= Input.GetAxis("Mouse Y") * _verticalTurnSensitivity;
+        _cameraAngle = Mathf.Clamp(_cameraAngle, _verticalMinAngle, _verticalMaxAngle);
+        _cameraTransform.localEulerAngles = Vector3.right * _cameraAngle;
+
+        _transform.Rotate(Vector3.up * _horizontalTurnSensitivity * Input.GetAxis("Mouse X"));
     }
 
     private void OnDrawGizmos()

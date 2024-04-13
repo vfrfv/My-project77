@@ -37,9 +37,7 @@ public class Movement : MonoBehaviour
     private void Move()
     {
         Vector3 forward = Vector3.ProjectOnPlane(_cameraTransform.forward, Vector3.up).normalized;
-        Vector3 right = Vector3.ProjectOnPlane(_cameraTransform.right, Vector3.up).normalized;
-
-        
+        Vector3 right = Vector3.ProjectOnPlane(_cameraTransform.right, Vector3.up).normalized;   
 
         if (_characterController != null)
         {
